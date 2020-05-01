@@ -5,6 +5,7 @@ import platform, subprocess
 import os
 import urllib3
 import time
+from tcping import Ping
 urllib3.disable_warnings()
 
 def attach_template(deviceName,templateName):
@@ -121,13 +122,14 @@ def ping(host_or_ip, packets=2, timeout=1):
         print("Ping result", result.returncode)
         return result.returncode == 0
 
+
+print("Starting script.....")
 routerName  = "cEdge1" if not os.environ.get('routerName') else os.environ.get('routerName')
 TemplateUp  = "Branches_cEdge1" if not os.environ.get('TemplateUp') else os.environ.get('TemplateUp')
 TemplateDn  = "Branches_cEdge1_NODIA" if not os.environ.get('TemplateDn') else os.environ.get('TemplateDn')
 monitorHost = "172.18.100.39" if not os.environ.get('monitorHost') else os.environ.get('monitorHost')
-loopTimer   = 10  if not os.environ.get('loopTimer') else str(os.environ.get('loopTimer'))
+loopTimer   = 10  if not os.environ.get('loopTimer') else int(os.environ.get('loopTimer'))
 
-print("Starting.....")
 while True:
     if( ping(monitorHost) ):
         attach_template( routerName, TemplateUp)
