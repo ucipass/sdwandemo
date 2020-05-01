@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+    sdwan:
+      container_name: "sdwan" 
+      build:
+        context: .
+        dockerfile: Dockerfile    
+      image: ucipass/sdwan
+      environment: 
+        - monitorHost=8.8.8.8
+        - routerName=cEdge1  
+        - TemplateUp=Branches_cEdge1  
+        - TemplateDn=Branches_cEdge1_NODIA  
+        - loopTimer=10  
+    #   command: "sh -c 'sleep 6000'"
