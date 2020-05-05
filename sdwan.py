@@ -15,14 +15,14 @@ def attach_template(deviceName,templateName):
     }
     session = requests.Session()
     response = session.post(url, headers=headers, data = payload, verify=False)
-    print("Login Status Code:", response.status_code)
+    # print("Login Status Code:", response.status_code)
 
     # TOKEN
     url = "https://172.18.100.91:443/dataservice/client/token"
     payload = {}
     response = session.get(url, headers=headers, data = payload, verify=False)
     token = response.text
-    print("Token:",token)
+    # print("Token:",token)
 
     # DEVICE LIST
     deviceId= ""
@@ -40,7 +40,7 @@ def attach_template(deviceName,templateName):
         print("Device not found:", deviceName)
         exit()
     else:
-        print("Device:",deviceName, deviceId )
+        # print("Device:",deviceName, deviceId )
 
     # TEMPLATE LIST
     templateId= ""
@@ -53,12 +53,13 @@ def attach_template(deviceName,templateName):
         if i['templateName'] == templateName: 
             templateId = i['templateId']
             templateObj = i
-    print("Number of templates:", len(templatelist['data']) )
+    # print("Number of templates:", len(templatelist['data']) )
     if templateId == "":
         print("templateId not found:", templateName)
         exit()
     else:
-        print("Template:",templateName, "Id", templateId )
+        # print("Template:",templateName, "Id", templateId )
+        pass
 
     # CHECK ATTACHED DEVICES
     url = "https://172.18.100.91:443/dataservice/template/device/config/attached/{0}".format(templateId)
@@ -105,6 +106,8 @@ def attach_template(deviceName,templateName):
     session.headers.update({'Content-Type': 'application/json'})
     response = session.post(url, data = payload, verify=False)
     print("Template Push Response:",response.text)
+    print("Waiting 60 Seconds for template to apply....",response.text)
+    time.sleep( 60)
 
 
 print("Starting script.....")
