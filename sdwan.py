@@ -24,7 +24,7 @@ def attach_template(deviceName,templateName):
     token = response.text
     # print("Token:",token)
 
-    # DEVICE LIST
+    # CHECK IF DEVICE(ROUTER) EXISTS
     deviceId= ""
     deviceObj = None
     url = "https://172.18.100.91:443/dataservice/device"
@@ -35,7 +35,7 @@ def attach_template(deviceName,templateName):
         if i['host-name'] == deviceName: 
             deviceId = i['uuid']
             deviceObj = i
-    print("Number of devices", len(devicelist['data']) )
+    # print("Number of devices", len(devicelist['data']) )
     if deviceId == "":
         print("Device not found:", deviceName)
         exit()
@@ -43,7 +43,7 @@ def attach_template(deviceName,templateName):
         # print("Device:",deviceName, deviceId )
         pass
 
-    # TEMPLATE LIST
+    # CHECK IF TEMPLATE EXISTS
     templateId= ""
     templateObj = None
     url = "https://172.18.100.91:443/dataservice/template/device"
@@ -62,7 +62,7 @@ def attach_template(deviceName,templateName):
         # print("Template:",templateName, "Id", templateId )
         pass
 
-    # CHECK ATTACHED DEVICES
+    # CHECK IF DEVICE ALREADY ATTACHED TO TEMPLATE
     url = "https://172.18.100.91:443/dataservice/template/device/config/attached/{0}".format(templateId)
     response = session.get(url, headers=headers, data = payload, verify=False)
     attachedlist = json.loads(response.text)
@@ -71,7 +71,8 @@ def attach_template(deviceName,templateName):
             print("Template:",templateName, "already attached to", deviceName )
             return True
 
-    # ATTACH TEMPLATE
+    # ATTACH TEMPLATE TO DEVICE
+    print("Attaching template:",templateName, "to device:", deviceName )
     url = "https://172.18.100.91:443/dataservice/template/device/config/attachfeature"
     payloadjson = {
         "deviceTemplateList": [
@@ -106,12 +107,12 @@ def attach_template(deviceName,templateName):
     session.headers.update({'X-XSRF-TOKEN': token})
     session.headers.update({'Content-Type': 'application/json'})
     response = session.post(url, data = payload, verify=False)
-    print("Template Push Response:",response.text)
-    print("Waiting 60 Seconds for template to apply....",response.text)
+    print("Waiting 60 sec...Template Push Response:",response.text)
     time.sleep(60)
 
 
 print("Starting script.....")
+# PARAMETERS
 routerName  = "cEdge1" if not os.environ.get('routerName') else os.environ.get('routerName')
 TemplateUp  = "Branches_cEdge1" if not os.environ.get('TemplateUp') else os.environ.get('TemplateUp')
 TemplateDn  = "Branches_cEdge1_NODIA" if not os.environ.get('TemplateDn') else os.environ.get('TemplateDn')
