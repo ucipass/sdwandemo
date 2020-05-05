@@ -41,6 +41,7 @@ def attach_template(deviceName,templateName):
         exit()
     else:
         # print("Device:",deviceName, deviceId )
+        pass
 
     # TEMPLATE LIST
     templateId= ""
@@ -107,7 +108,7 @@ def attach_template(deviceName,templateName):
     response = session.post(url, data = payload, verify=False)
     print("Template Push Response:",response.text)
     print("Waiting 60 Seconds for template to apply....",response.text)
-    time.sleep( 60)
+    time.sleep(60)
 
 
 print("Starting script.....")
