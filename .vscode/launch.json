@@ -8,7 +8,7 @@
             "program": "${file}",
             "console": "internalConsole",
             "env": {
-                "monitorHost": "172.18.100.1"
+                "monitorHost": "172.18.100.38"
             }
             
         },

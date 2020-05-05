@@ -7,7 +7,7 @@ services:
         dockerfile: Dockerfile    
       image: ucipass/sdwan
       environment: 
-        - monitorHost=8.8.8.8
+        - monitorHost=10.0.1.1
         - routerName=cEdge1  
         - TemplateUp=Branches_cEdge1  
         - TemplateDn=Branches_cEdge1_NODIA  

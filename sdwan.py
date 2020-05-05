@@ -1,11 +1,8 @@
 import requests
 import json
-import pprint
-import platform, subprocess
 import os
-import urllib3
 import time
-from tcping import Ping
+import urllib3
 urllib3.disable_warnings()
 
 def attach_template(deviceName,templateName):
@@ -110,29 +107,17 @@ def attach_template(deviceName,templateName):
     print("Template Push Response:",response.text)
 
 
-def ping(host_or_ip, packets=2, timeout=1):
-    print("Pinging", host_or_ip)
-    if platform.system().lower() == 'windows':
-        command = ['ping', '-n', str(packets), '-w', str(timeout), host_or_ip]
-        result = subprocess.run(command, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, creationflags=0x08000000)
-        return result.returncode == 0 and b'TTL=' in result.stdout
-    else:
-        command = ['ping', '-c', str(packets), '-w', str(timeout), host_or_ip]
-        result = subprocess.run(command, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        print("Ping result", result.returncode)
-        return result.returncode == 0
-
-
 print("Starting script.....")
 routerName  = "cEdge1" if not os.environ.get('routerName') else os.environ.get('routerName')
 TemplateUp  = "Branches_cEdge1" if not os.environ.get('TemplateUp') else os.environ.get('TemplateUp')
 TemplateDn  = "Branches_cEdge1_NODIA" if not os.environ.get('TemplateDn') else os.environ.get('TemplateDn')
-monitorHost = "172.18.100.39" if not os.environ.get('monitorHost') else os.environ.get('monitorHost')
+monitorHost = "10.0.1.1" if not os.environ.get('monitorHost') else os.environ.get('monitorHost')
 loopTimer   = 10  if not os.environ.get('loopTimer') else int(os.environ.get('loopTimer'))
 
 while True:
-    if( ping(monitorHost) ):
-        attach_template( routerName, TemplateUp)
-    else:
+    if( os.system("ping -c 1 " + monitorHost) ):
         attach_template( routerName, TemplateDn)
+    else:
+        attach_template( routerName, TemplateUp)
+
     time.sleep( loopTimer )
